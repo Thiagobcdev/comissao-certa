@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Comissão Certa
 
-## Getting Started
+Motor de comissões de vendas com **regras de negócio versionadas, testadas e explicáveis**, para uma distribuidora B2B fictícia (Distribuidora Horizonte).
 
-First, run the development server:
+> 🚧 Em construção. Pronto até aqui: modelo de dados e **motor de regras com 48 testes**.
+
+## O problema
+Em muitas empresas a comissão é calculada em planilha. Faixas de meta, percentuais por categoria, devoluções e clientes inadimplentes viram fórmulas frágeis, e todo fim de mês alguém pergunta: *"por que eu recebi isso?"*
+
+## As regras
+| # | Regra | Parâmetros iniciais |
+|---|---|---|
+| R1 | Comissão base por categoria | Alimentos 2% · Bebidas 3% · Limpeza 4% · Higiene 3,5% |
+| R2 | Multiplicador por atingimento da meta | < 70% → 0,5x · 70–99% → 1,0x · 100–119% → 1,2x · ≥ 120% → 1,5x |
+| R3 | Estorno por devolução no mês em que ela ocorre | — |
+| R4 | Estorno por inadimplência e reversão se o cliente pagar | tolerância de 60 dias |
+| R5 | Bônus do gestor quando a equipe bate a meta coletiva | 10% da comissão da equipe |
+| R6 | Teto mensal por vendedor | R$ 25.000,00 |
+| R7 | Regras versionadas por vigência | mudar junho não altera maio |
+| R8 | Fechamento do mês imutável e auditado | — |
+| R9 | Dinheiro em centavos inteiros, arredondamento half-up por linha | — |
+
+Cada linha de comissão guarda a **memória de cálculo** (itens, %, atingimento, faixa, versão), para que qualquer valor possa ser explicado.
+
+Detalhes e decisões: [`docs/design.md`](docs/design.md).
+
+## Rodar localmente
+Pré-requisitos: Node 22+ e Docker.
 
 ```bash
+cp .env.example .env        # gere um SESSION_SECRET novo (instrução no arquivo)
+npm install
+npm run db:up               # Postgres 16 na porta 5434
+npm run db:migrate
+npm test                    # testes do motor
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Stack
+Next.js 16 · TypeScript · PostgreSQL 16 · Prisma 7 · Zod · Vitest · Tailwind CSS
