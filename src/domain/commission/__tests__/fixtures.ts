@@ -1,19 +1,9 @@
 import type { EntradaFechamento, VendaInput } from "../motor";
 import type { Regras, VersaoRegras } from "../regras";
+import { REGRAS_INICIAIS } from "../regras-padrao";
 
-/** Regras da versão inicial da Distribuidora Horizonte (ver docs/design.md §3). */
-export const regrasPadrao: Regras = {
-  categorias: { alimentos: 200, bebidas: 300, limpeza: 400, higiene: 350 }, // 2% · 3% · 4% · 3,5%
-  faixas: [
-    { minAtingimentoBp: 0, multiplicadorBp: 5_000 }, //   < 70%  → 0,5x
-    { minAtingimentoBp: 7_000, multiplicadorBp: 10_000 }, // 70–99% → 1,0x
-    { minAtingimentoBp: 10_000, multiplicadorBp: 12_000 }, // 100–119% → 1,2x
-    { minAtingimentoBp: 12_000, multiplicadorBp: 15_000 }, // ≥ 120% → 1,5x
-  ],
-  inadimplenciaDias: 60,
-  bonusGestorBp: 1_000, // 10%
-  tetoMensalCentavos: 2_500_000, // R$ 25.000,00
-};
+/** Mesmas regras do seed: os testes documentam o comportamento real da versão inicial. */
+export const regrasPadrao: Regras = REGRAS_INICIAIS;
 
 export const versaoPadrao: VersaoRegras = { id: "v1", vigenciaInicio: "2026-01-01", regras: regrasPadrao };
 
