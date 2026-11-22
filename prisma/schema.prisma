@@ -1,0 +1,164 @@
+// Comissão Certa — modelo de dados.
+// Convenções:
+//  - Dinheiro SEMPRE em centavos (Int). Nunca Float/Decimal no domínio.
+//  - Datas de negócio em @db.Date (sem hora/fuso). Competência = "YYYY-MM".
+//  - Regras de comissão versionadas por vigência (sempre dia 1 de um mês).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Papel {
+  ADMIN
+  GESTOR
+  VENDEDOR
+}
+
+enum TipoLinha {
+  BASE                    // comissão da venda no mês (R1 × R2)
+  AJUSTE_TETO             // corte do excedente ao teto mensal (R6)
+  BONUS_GESTOR            // bônus sobre a comissão da equipe (R5)
+  ESTORNO_DEVOLUCAO       // devolução de venda já comissionada (R3)
+  ESTORNO_INADIMPLENCIA   // título vencido além da tolerância (R4)
+  REVERSAO_INADIMPLENCIA  // cliente pagou após o estorno (R4)
+}
+
+model Equipe {
+  id        String    @id @default(cuid())
+  nome      String    @unique
+  gestorId  String?   @unique
+  gestor    Usuario?  @relation("GestorDaEquipe", fields: [gestorId], references: [id])
+  membros   Usuario[] @relation("MembrosDaEquipe")
+  metas     MetaEquipe[]
+}
+
+model Usuario {
+  id            String          @id @default(cuid())
+  nome          String
+  email         String          @unique
+  senhaHash     String
+  papel         Papel
+  equipeId      String?
+  equipe        Equipe?         @relation("MembrosDaEquipe", fields: [equipeId], references: [id])
+  gerencia      Equipe?         @relation("GestorDaEquipe")
+  vendas        Venda[]
+  metas         Meta[]
+  linhas        LinhaComissao[]
+  versoesPublicadas VersaoRegras[]
+  fechamentos   Fechamento[]
+  auditoria     Auditoria[]
+  criadoEm      DateTime        @default(now())
+
+  @@index([equipeId])
+}
+
+model Categoria {
+  id    String      @id @default(cuid())
+  slug  String      @unique
+  nome  String      @unique
+  itens ItemVenda[]
+}
+
+model Venda {
+  id           String      @id @default(cuid())
+  numeroPedido String      @unique
+  vendedorId   String
+  vendedor     Usuario     @relation(fields: [vendedorId], references: [id])
+  clienteNome  String
+  data         DateTime    @db.Date
+  vencimento   DateTime    @db.Date
+  pagoEm       DateTime?   @db.Date
+  devolvidaEm  DateTime?   @db.Date
+  itens        ItemVenda[]
+  linhas       LinhaComissao[]
+  criadoEm     DateTime    @default(now())
+
+  @@index([vendedorId, data])
+  @@index([data])
+}
+
+model ItemVenda {
+  id            String    @id @default(cuid())
+  vendaId       String
+  venda         Venda     @relation(fields: [vendaId], references: [id], onDelete: Cascade)
+  categoriaId   String
+  categoria     Categoria @relation(fields: [categoriaId], references: [id])
+  valorCentavos Int
+
+  @@index([vendaId])
+}
+
+model Meta {
+  id            String  @id @default(cuid())
+  vendedorId    String
+  vendedor      Usuario @relation(fields: [vendedorId], references: [id])
+  competencia   String  // "YYYY-MM"
+  valorCentavos Int
+
+  @@unique([vendedorId, competencia])
+}
+
+model MetaEquipe {
+  id            String @id @default(cuid())
+  equipeId      String
+  equipe        Equipe @relation(fields: [equipeId], references: [id])
+  competencia   String
+  valorCentavos Int
+
+  @@unique([equipeId, competencia])
+}
+
+model VersaoRegras {
+  id             String   @id @default(cuid())
+  vigenciaInicio DateTime @unique @db.Date // sempre dia 1 de um mês
+  descricao      String
+  regras         Json     // validado por Zod: src/domain/commission/regras.ts
+  publicadaPorId String
+  publicadaPor   Usuario  @relation(fields: [publicadaPorId], references: [id])
+  publicadaEm    DateTime @default(now())
+  fechamentos    Fechamento[]
+}
+
+model Fechamento {
+  id             String          @id @default(cuid())
+  competencia    String          @unique // "YYYY-MM" — imutável depois de criado (R8)
+  versaoRegrasId String
+  versaoRegras   VersaoRegras    @relation(fields: [versaoRegrasId], references: [id])
+  totalCentavos  Int
+  fechadoPorId   String
+  fechadoPor     Usuario         @relation(fields: [fechadoPorId], references: [id])
+  fechadoEm      DateTime        @default(now())
+  linhas         LinhaComissao[]
+}
+
+model LinhaComissao {
+  id             String     @id @default(cuid())
+  fechamentoId   String
+  fechamento     Fechamento @relation(fields: [fechamentoId], references: [id], onDelete: Cascade)
+  beneficiarioId String
+  beneficiario   Usuario    @relation(fields: [beneficiarioId], references: [id])
+  vendaId        String?
+  venda          Venda?     @relation(fields: [vendaId], references: [id])
+  tipo           TipoLinha
+  valorCentavos  Int        // negativo em estornos e ajustes
+  memoria        Json       // memória de cálculo: como esse valor foi obtido
+
+  @@index([beneficiarioId])
+  @@index([vendaId])
+}
+
+model Auditoria {
+  id        String   @id @default(cuid())
+  usuarioId String?
+  usuario   Usuario? @relation(fields: [usuarioId], references: [id])
+  acao      String
+  detalhes  Json
+  criadoEm  DateTime @default(now())
+
+  @@index([criadoEm])
+}
