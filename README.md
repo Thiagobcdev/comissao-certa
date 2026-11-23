@@ -2,7 +2,9 @@
 
 Motor de comissões de vendas com **regras de negócio versionadas, testadas e explicáveis**, para uma distribuidora B2B fictícia (Distribuidora Horizonte).
 
-> 🚧 Em construção. Pronto até aqui: modelo de dados e **motor de regras com 48 testes**.
+> 🚧 Em construção. Pronto até aqui: **motor de regras com 48 testes**, fechamento imutável, seed realista, login com 3 papéis e **extrato do vendedor com memória de cálculo**.
+
+![Extrato do vendedor: cada lançamento explica como o valor foi calculado](docs/img/extrato-vendedor.png)
 
 ## O problema
 Em muitas empresas a comissão é calculada em planilha. Faixas de meta, percentuais por categoria, devoluções e clientes inadimplentes viram fórmulas frágeis, e todo fim de mês alguém pergunta: *"por que eu recebi isso?"*
@@ -32,9 +34,23 @@ cp .env.example .env        # gere um SESSION_SECRET novo (instrução no arquiv
 npm install
 npm run db:up               # Postgres 16 na porta 5434
 npm run db:migrate
+npm run db:seed             # Distribuidora Horizonte: ~4.900 pedidos, jun–out fechados
 npm test                    # testes do motor
 npm run dev
 ```
+
+**Contas de demonstração** (senha `horizonte123`, apenas local):
+
+| Papel | E-mail |
+|---|---|
+| Admin | `admin@horizonte.test` |
+| Gestora (Centro-Oeste) | `marina.costa@horizonte.test` |
+| Vendedora | `ana.ribeiro@horizonte.test` |
+
+## Segurança
+- Sessão em JWT (HS256, `jose`) num cookie httpOnly com `SameSite=Lax` e validade de 8 h.
+- Senhas com bcrypt. O login responde no mesmo tempo para contas existentes e inexistentes.
+- O `proxy` faz uma checagem otimista por rota e papel. **Toda leitura de dados confere a sessão e o papel de novo** no servidor (`src/server/auth.ts`).
 
 ## Stack
 Next.js 16 · TypeScript · PostgreSQL 16 · Prisma 7 · Zod · Vitest · Tailwind CSS
