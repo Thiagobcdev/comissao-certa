@@ -1,6 +1,6 @@
 # Comissão Certa — design do MVP
 
-> Status: **rascunho para aprovação** (22/11/2026). Nada foi construído ainda.
+> Status: **implementado** (23/11/2026). Este é o design aprovado antes da construção; o README descreve o resultado e as decisões tomadas no caminho.
 
 ## 1. O que é e por quê
 Motor de comissões de vendas para uma **distribuidora B2B fictícia**. Projeto de vitrine do GitHub de Thiago B Clemente. O objetivo é provar o diferencial do portfólio, **"entendo a regra de negócio e construo o sistema inteiro"**, com regras reais, versionadas, testadas e explicáveis.
