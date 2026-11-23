@@ -9,6 +9,7 @@ const NAV = {
     { href: "/admin", label: "Visão geral" },
     { href: "/admin/regras", label: "Regras" },
     { href: "/admin/importar", label: "Importar vendas" },
+    { href: "/admin/fechamento", label: "Fechamento" },
   ],
   GESTOR: [{ href: "/gestor", label: "Minha equipe" }],
   VENDEDOR: [{ href: "/vendedor", label: "Meu extrato" }],

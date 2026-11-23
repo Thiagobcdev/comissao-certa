@@ -5,3 +5,4 @@ export * from "./motor";
 export * from "./regras-padrao";
 export * from "./projecao";
 export * from "./versoes";
+export * from "./conferencia";

@@ -34,6 +34,8 @@ Detalhes e decisões: [`docs/design.md`](docs/design.md).
 
 - **Importar vendas (admin)** (`/admin/importar`): CSV com uma linha por item (`pedido;data;vendedor;cliente;vencimento;categoria;valor`, modelo em `public/modelo-vendas.csv`). O arquivo é validado linha a linha com relatório de erros: pedido repetido, mês já fechado (R8), vendedor sem meta, categoria desconhecida, valor ou data inválidos. Se houver qualquer erro, nada é gravado; a gravação valida de novo dentro da transação.
 
+- **Fechamento (admin)** (`/admin/fechamento`): prévia do próximo mês com conferência por tipo de lançamento e por equipe, alertas (teto, saldo negativo, vendedor sem vendas, bônus) e fechamento com confirmação digitada, liberado só depois do fim do mês. Abaixo, o histórico dos meses fechados com a versão de regras usada.
+
 ## Rodar localmente
 Pré-requisitos: Node 22+ e Docker.
 
