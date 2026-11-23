@@ -7,6 +7,7 @@ import { sair } from "../login/actions";
 const NAV = {
   ADMIN: [
     { href: "/admin", label: "Visão geral" },
+    { href: "/admin/regras", label: "Regras" },
   ],
   GESTOR: [{ href: "/gestor", label: "Minha equipe" }],
   VENDEDOR: [{ href: "/vendedor", label: "Meu extrato" }],

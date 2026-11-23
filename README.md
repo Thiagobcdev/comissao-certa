@@ -30,6 +30,8 @@ Detalhes e decisões: [`docs/design.md`](docs/design.md).
 - **Extrato do vendedor** (`/vendedor`): comissão do mês, atingimento, multiplicador e cada lançamento com a memória de cálculo.
 - **Painel do gestor** (`/gestor`): resumo da equipe, bônus do gestor (R5), ranking dos vendedores e evolução mês a mês. No mês em aberto mostra a **prévia** ("se fechasse hoje") e uma **projeção** para o fim do mês: o ritmo de vendas é extrapolado e recalculado pelo mesmo motor, então faixa, teto e bônus são aplicados como num fechamento real (`src/domain/commission/projecao.ts`).
 
+- **Regras (admin)** (`/admin/regras`): histórico de versões com o que mudou em cada uma. Uma nova versão parte da vigente, passa por uma revisão com o diff de parâmetros e só pode valer a partir de um mês ainda não fechado (R7/R8). A validação fica em funções puras (`src/domain/commission/versoes.ts`) e é refeita dentro da transação de publicação.
+
 ## Rodar localmente
 Pré-requisitos: Node 22+ e Docker.
 

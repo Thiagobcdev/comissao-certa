@@ -39,7 +39,7 @@ function paraVendaInput(v: VendaComItens): VendaInput {
   };
 }
 
-export async function carregarVersoes(db: Db): Promise<VersaoRegras[]> {
+export async function carregarVersoes(db: Pick<Db, "versaoRegras">): Promise<VersaoRegras[]> {
   const versoes = await db.versaoRegras.findMany({ orderBy: { vigenciaInicio: "asc" } });
   return versoes.map((v) => ({ id: v.id, vigenciaInicio: paraISO(v.vigenciaInicio), regras: parseRegras(v.regras) }));
 }
