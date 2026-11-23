@@ -6,3 +6,4 @@ export * from "./regras-padrao";
 export * from "./projecao";
 export * from "./versoes";
 export * from "./conferencia";
+export * from "./simulacao";

@@ -28,6 +28,7 @@ Detalhes e decisões: [`docs/design.md`](docs/design.md).
 
 ## Telas
 - **Extrato do vendedor** (`/vendedor`): comissão do mês, atingimento, multiplicador e cada lançamento com a memória de cálculo.
+- **Simulador do vendedor** (`/vendedor/simulador`): "se eu vender +R$ X em Bebidas até o fim do mês" → novo atingimento, nova faixa e nova comissão, com atalho para completar a próxima faixa na categoria que mais rende. Roda o mesmo motor no navegador, com a entrada recortada só para o vendedor logado (`entradaDoVendedor`): vendas de colegas e metas de equipe não saem do servidor.
 - **Painel do gestor** (`/gestor`): resumo da equipe, bônus do gestor (R5), ranking dos vendedores e evolução mês a mês. No mês em aberto mostra a **prévia** ("se fechasse hoje") e uma **projeção** para o fim do mês: o ritmo de vendas é extrapolado e recalculado pelo mesmo motor, então faixa, teto e bônus são aplicados como num fechamento real (`src/domain/commission/projecao.ts`).
 
 - **Regras (admin)** (`/admin/regras`): histórico de versões com o que mudou em cada uma. Uma nova versão parte da vigente, passa por uma revisão com o diff de parâmetros e só pode valer a partir de um mês ainda não fechado (R7/R8). A validação fica em funções puras (`src/domain/commission/versoes.ts`) e é refeita dentro da transação de publicação.

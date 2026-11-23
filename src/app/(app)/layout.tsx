@@ -12,7 +12,10 @@ const NAV = {
     { href: "/admin/fechamento", label: "Fechamento" },
   ],
   GESTOR: [{ href: "/gestor", label: "Minha equipe" }],
-  VENDEDOR: [{ href: "/vendedor", label: "Meu extrato" }],
+  VENDEDOR: [
+    { href: "/vendedor", label: "Meu extrato" },
+    { href: "/vendedor/simulador", label: "Simulador" },
+  ],
 } as const;
 
 const NOME_PAPEL = { ADMIN: "Administrador", GESTOR: "Gestor", VENDEDOR: "Vendedor" } as const;
