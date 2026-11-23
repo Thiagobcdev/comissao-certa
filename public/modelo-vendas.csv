@@ -1,0 +1,7 @@
+pedido;data;vendedor;cliente;vencimento;categoria;valor
+IMP-0001;23/11/2026;ana.ribeiro@horizonte.test;Mercado Bom Preço;23/12/2026;Bebidas;12.480,00
+IMP-0001;23/11/2026;ana.ribeiro@horizonte.test;Mercado Bom Preço;23/12/2026;Alimentos;8.315,50
+IMP-0002;23/11/2026;diego.souza@horizonte.test;Hotel Serra Azul;22/12/2026;Limpeza;21.900,00
+IMP-0003;22/11/2026;eduarda.nunes@horizonte.test;"Farmácia Popular; Centro";22/12/2026;Higiene;6.740,90
+IMP-0003;22/11/2026;eduarda.nunes@horizonte.test;"Farmácia Popular; Centro";22/12/2026;Limpeza;3.210,00
+IMP-0004;21/11/2026;igor.teixeira@horizonte.test;Restaurante Sabor da Terra;21/12/2026;Alimentos;15.000,00

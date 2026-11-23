@@ -32,6 +32,8 @@ Detalhes e decisões: [`docs/design.md`](docs/design.md).
 
 - **Regras (admin)** (`/admin/regras`): histórico de versões com o que mudou em cada uma. Uma nova versão parte da vigente, passa por uma revisão com o diff de parâmetros e só pode valer a partir de um mês ainda não fechado (R7/R8). A validação fica em funções puras (`src/domain/commission/versoes.ts`) e é refeita dentro da transação de publicação.
 
+- **Importar vendas (admin)** (`/admin/importar`): CSV com uma linha por item (`pedido;data;vendedor;cliente;vencimento;categoria;valor`, modelo em `public/modelo-vendas.csv`). O arquivo é validado linha a linha com relatório de erros: pedido repetido, mês já fechado (R8), vendedor sem meta, categoria desconhecida, valor ou data inválidos. Se houver qualquer erro, nada é gravado; a gravação valida de novo dentro da transação.
+
 ## Rodar localmente
 Pré-requisitos: Node 22+ e Docker.
 
