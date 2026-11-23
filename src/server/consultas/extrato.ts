@@ -62,14 +62,14 @@ export async function competenciasDisponiveis(usuarioId: string): Promise<string
   return metas.map((m) => m.competencia);
 }
 
-function calcularProximaFaixa(faixas: readonly Faixa[], atingimentoBp: number, faturado: number, meta: number) {
+export function calcularProximaFaixa(faixas: readonly Faixa[], atingimentoBp: number, faturado: number, meta: number) {
   const proxima = faixas.find((f) => f.minAtingimentoBp > atingimentoBp);
   if (!proxima || meta <= 0) return null;
   const necessario = Math.ceil((meta * proxima.minAtingimentoBp) / BP);
   return { ...proxima, faltaCentavos: Math.max(0, necessario - faturado) };
 }
 
-async function faturadoDoMes(usuarioId: string, competencia: string): Promise<number> {
+export async function faturadoDoMes(usuarioId: string, competencia: string): Promise<number> {
   const inicio = new Date(`${primeiroDia(competencia)}T00:00:00Z`);
   const fim = new Date(`${ultimoDia(competencia)}T00:00:00Z`);
   const itens = await prisma.itemVenda.findMany({

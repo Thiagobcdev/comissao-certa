@@ -26,6 +26,10 @@ Cada linha de comissão guarda a **memória de cálculo** (itens, %, atingimento
 
 Detalhes e decisões: [`docs/design.md`](docs/design.md).
 
+## Telas
+- **Extrato do vendedor** (`/vendedor`): comissão do mês, atingimento, multiplicador e cada lançamento com a memória de cálculo.
+- **Painel do gestor** (`/gestor`): resumo da equipe, bônus do gestor (R5), ranking dos vendedores e evolução mês a mês. No mês em aberto mostra a **prévia** ("se fechasse hoje") e uma **projeção** para o fim do mês: o ritmo de vendas é extrapolado e recalculado pelo mesmo motor, então faixa, teto e bônus são aplicados como num fechamento real (`src/domain/commission/projecao.ts`).
+
 ## Rodar localmente
 Pré-requisitos: Node 22+ e Docker.
 

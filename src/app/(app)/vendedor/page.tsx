@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Suspense } from "react";
+import { BarraAtingimento } from "@/components/barra-atingimento";
 import { MemoriaCalculo } from "@/components/memoria-calculo";
+import { SeletorCompetencia } from "@/components/seletor-competencia";
 import { Badge, Card, CardHeader, Skeleton, Stat } from "@/components/ui";
 import { formatarBRL, formatarMultiplicador, formatarPercentual, type TipoLinha } from "@/domain/commission";
 import { competenciaAtual, dataBR, rotuloCompetencia } from "@/lib/formato";
@@ -59,29 +60,8 @@ async function ConteudoExtrato({ searchParams }: { searchParams: PageProps<"/ven
   );
 }
 
-function SeletorCompetencia({ competencias, atual }: { competencias: string[]; atual: string }) {
-  return (
-    <nav aria-label="Competência" className="flex flex-wrap gap-2">
-      {competencias.map((c) => (
-        <Link
-          key={c}
-          href={`?c=${c}`}
-          aria-current={c === atual ? "page" : undefined}
-          className={cn(
-            "rounded-full border px-3 py-1 text-sm",
-            c === atual ? "border-brand bg-brand text-brand-fg" : "border-line bg-surface hover:bg-surface-2",
-          )}
-        >
-          {rotuloCompetencia(c)}
-        </Link>
-      ))}
-    </nav>
-  );
-}
-
 function ResumoMes({ extrato }: { extrato: Extrato }) {
   const r = extrato.resumo;
-  const pct = r.metaCentavos > 0 ? Math.min(150, (r.faturadoCentavos / r.metaCentavos) * 100) : 0;
 
   return (
     <Card>
@@ -123,23 +103,7 @@ function ResumoMes({ extrato }: { extrato: Extrato }) {
         />
       </div>
       <div className="border-t border-line px-5 py-4">
-        <div className="relative h-2 rounded-full bg-surface-2" role="img" aria-label={`Atingimento de ${pct.toFixed(0)}% da meta`}>
-          <div className="h-2 rounded-full bg-brand" style={{ width: `${(pct / 150) * 100}%` }} />
-          {[70, 100, 120].map((marco) => (
-            <span key={marco} className="absolute top-0 h-2 w-px bg-fg/40" style={{ left: `${(marco / 150) * 100}%` }} />
-          ))}
-        </div>
-        <div className="relative mt-1 h-4 text-xs text-muted">
-          {[
-            [70, "1x"],
-            [100, "1,2x"],
-            [120, "1,5x"],
-          ].map(([marco, mult]) => (
-            <span key={marco} className="absolute -translate-x-1/2 whitespace-nowrap" style={{ left: `${(Number(marco) / 150) * 100}%` }}>
-              {marco}%<span className="hidden sm:inline"> · {mult}</span>
-            </span>
-          ))}
-        </div>
+        <BarraAtingimento atingimentoBp={r.atingimentoBp} />
       </div>
     </Card>
   );
